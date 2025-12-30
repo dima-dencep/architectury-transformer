@@ -23,12 +23,13 @@
 
 package dev.architectury.transformer.transformers;
 
-import dev.architectury.tinyremapper.IMappingProvider;
-import dev.architectury.tinyremapper.TinyUtils;
 import dev.architectury.transformer.transformers.base.TinyRemapperTransformer;
 import dev.architectury.transformer.util.Logger;
-import net.fabricmc.mapping.tree.TinyMappingFactory;
-import net.fabricmc.mapping.tree.TinyTree;
+import net.fabricmc.mappingio.MappingReader;
+import net.fabricmc.mappingio.tree.MemoryMappingTree;
+import net.fabricmc.mappingio.tree.VisitableMappingTree;
+import net.fabricmc.tinyremapper.IMappingProvider;
+import net.fabricmc.tinyremapper.TinyUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,7 +41,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class TransformForgeEnvironment implements TinyRemapperTransformer {
-    private TinyTree srg;
+    private VisitableMappingTree srg;
     private Map<String, IMappingProvider> mixinMappingCache = new HashMap<>();
     
     @Override
@@ -74,7 +75,7 @@ public class TransformForgeEnvironment implements TinyRemapperTransformer {
         if (srg == null) {
             Path srgMappingsPath = Paths.get(System.getProperty(BuiltinProperties.MAPPINGS_WITH_SRG));
             try (BufferedReader reader = Files.newBufferedReader(srgMappingsPath)) {
-                srg = TinyMappingFactory.loadWithDetection(reader);
+                MappingReader.read(reader, srg = new MemoryMappingTree());
             }
         }
         

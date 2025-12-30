@@ -23,8 +23,8 @@
 
 package dev.architectury.transformer.transformers;
 
-import dev.architectury.tinyremapper.IMappingProvider;
-import dev.architectury.tinyremapper.TinyUtils;
+import net.fabricmc.tinyremapper.IMappingProvider;
+import net.fabricmc.tinyremapper.TinyUtils;
 import dev.architectury.transformer.transformers.base.TinyRemapperTransformer;
 import dev.architectury.transformer.util.Logger;
 

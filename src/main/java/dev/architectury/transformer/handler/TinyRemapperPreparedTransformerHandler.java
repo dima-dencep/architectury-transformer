@@ -23,24 +23,18 @@
 
 package dev.architectury.transformer.handler;
 
-import dev.architectury.tinyremapper.IMappingProvider;
-import dev.architectury.tinyremapper.TinyRemapper;
 import dev.architectury.transformer.transformers.base.edit.TransformerContext;
 import dev.architectury.transformer.transformers.classpath.ReadClasspathProvider;
-import dev.architectury.transformer.util.Logger;
-
-import java.io.IOException;
-import java.util.Set;
 
 public class TinyRemapperPreparedTransformerHandler extends SimpleTransformerHandler {
-    private TinyRemapper remapper;
+    // private TinyRemapper remapper;
     
     public TinyRemapperPreparedTransformerHandler(ReadClasspathProvider classpath, TransformerContext context, boolean nested) throws Exception {
         super(classpath, context, nested);
-        prepare();
+        // prepare();
     }
     
-    private void prepare() throws Exception {
+    /*private void prepare() throws Exception {
         Logger.debug("Preparing tiny remapper prepared transformer: " + getClass().getName());
         remapper = TinyRemapper.newRemapper()
                 .skipConflictsChecking(true)
@@ -53,9 +47,9 @@ public class TinyRemapperPreparedTransformerHandler extends SimpleTransformerHan
         
         remapper.readClassPath(classpath.provide());
         remapper.prepareClasses();
-    }
+    }*/
     
-    @Override
+    /*@Override
     public TinyRemapper getRemapper(Set<IMappingProvider> providers) throws Exception {
         remapper.replaceMappings(providers);
         if (remapper.isMappingsDirty()) {
@@ -76,5 +70,5 @@ public class TinyRemapperPreparedTransformerHandler extends SimpleTransformerHan
             this.remapper.finish();
         }
         this.remapper = null;
-    }
+    }*/
 }

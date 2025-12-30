@@ -23,7 +23,7 @@
 
 package dev.architectury.transformer.transformers;
 
-import dev.architectury.tinyremapper.IMappingProvider;
+import net.fabricmc.tinyremapper.IMappingProvider;
 import dev.architectury.transformer.transformers.base.TinyRemapperTransformer;
 
 import java.nio.charset.StandardCharsets;

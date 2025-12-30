@@ -23,8 +23,8 @@
 
 package dev.architectury.transformer.handler;
 
-import dev.architectury.tinyremapper.IMappingProvider;
-import dev.architectury.tinyremapper.TinyRemapper;
+import net.fabricmc.tinyremapper.IMappingProvider;
+import net.fabricmc.tinyremapper.TinyRemapper;
 import dev.architectury.transformer.Transformer;
 import dev.architectury.transformer.input.FileAccess;
 import dev.architectury.transformer.input.MemoryFileAccess;
@@ -63,7 +63,7 @@ public class SimpleTransformerHandler implements TransformHandler {
         if (closed) throw new IllegalStateException("Cannot transform when the handler is closed already!");
         Logger.debug("Transforming from " + input + " to " + output + " with " + transformers.size() + " transformer(s) on " + getClass().getName());
         
-        final Set<IMappingProvider> mappingProviders = collectMappings(transformers);
+        /*final Set<IMappingProvider> mappingProviders = collectMappings(transformers);
         
         if (!mappingProviders.isEmpty()) {
             Logger.debug("Remapping with " + mappingProviders.size() + " mapping provider(s):");
@@ -71,7 +71,7 @@ public class SimpleTransformerHandler implements TransformHandler {
                 Logger.debug(" - " + provider);
             }
             remapTR(mappingProviders, input, output);
-        }
+        }*/
         
         if (anyTransformerModifiesClass(transformers)) {
             Logger.debug("Found class transformer");
@@ -113,7 +113,7 @@ public class SimpleTransformerHandler implements TransformHandler {
         return mappings;
     }
     
-    private void remapTR(Set<IMappingProvider> mappingProviders, String input, FileAccess output) throws Exception {
+    /*private void remapTR(Set<IMappingProvider> mappingProviders, String input, FileAccess output) throws Exception {
         TinyRemapper remapper = getRemapper(mappingProviders);
         
         LoggerFilter.replaceSystemOut();
@@ -138,7 +138,7 @@ public class SimpleTransformerHandler implements TransformHandler {
         } finally {
             closeRemapper(remapper);
         }
-    }
+    }*/
     
     private void debugRemapper(TinyRemapper remapper) throws Exception {
         Field classMapField = remapper.getClass().getDeclaredField("classMap");
@@ -147,7 +147,7 @@ public class SimpleTransformerHandler implements TransformHandler {
         ((Map<?, ?>) classMapField.get(remapper)).forEach((from, to) -> Logger.debug(from + " -> " + to));
     }
     
-    protected TinyRemapper getRemapper(Set<IMappingProvider> providers) throws Exception {
+    /*protected TinyRemapper getRemapper(Set<IMappingProvider> providers) throws Exception {
         TinyRemapper.Builder builder = TinyRemapper.newRemapper();
         builder.threads(Runtime.getRuntime().availableProcessors());
         for (IMappingProvider provider : providers) {
@@ -163,7 +163,7 @@ public class SimpleTransformerHandler implements TransformHandler {
     
     protected void closeRemapper(TinyRemapper remapper) throws Exception {
         remapper.finish();
-    }
+    }*/
     
     private boolean anyTransformerModifiesClass(List<Transformer> transformers) {
         for (Transformer transformer : transformers) {

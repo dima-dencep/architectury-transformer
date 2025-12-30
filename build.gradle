@@ -3,8 +3,8 @@ plugins {
     id "idea"
     id "eclipse"
     id "maven-publish"
-    id "com.github.johnrengelman.shadow" version "5.0.0"
-    id "org.cadixdev.licenser" version "0.6.1"
+    id "com.gradleup.shadow" version "9.3.0"
+    id "net.neoforged.licenser" version "0.7.5"
 }
 
 group "dev.architectury"
@@ -20,11 +20,11 @@ if (!isSnapshot) {
 
 logger.lifecycle(":building architectury transformer v${version}")
 
-java {
+/*java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(8)
     }
-}
+}*/
 
 repositories {
     maven { url "https://maven.architectury.dev/" }
@@ -54,25 +54,26 @@ license {
 }
 
 dependencies {
-    implementation "dev.architectury:tiny-remapper:1.1.0"
-    implementation "net.fabricmc:tiny-mappings-parser:0.2.2.14"
-    implementation "org.ow2.asm:asm:9.6"
-    implementation "org.ow2.asm:asm-commons:9.6"
-    implementation "org.ow2.asm:asm-tree:9.6"
-    implementation "org.ow2.asm:asm-util:9.6"
-    implementation "com.google.guava:guava:29.0-jre"
-    implementation "com.google.code.gson:gson:2.8.5"
+    implementation "net.fabricmc:mapping-io:0.7.1"
+    implementation "net.fabricmc:tiny-remapper:0.11.2"
+    implementation "org.ow2.asm:asm:9.9.1"
+    implementation "org.ow2.asm:asm-commons:9.9.1"
+    implementation "org.ow2.asm:asm-tree:9.9.1"
+    implementation "org.ow2.asm:asm-util:9.9.1"
+    implementation "com.google.guava:guava:33.5.0-jre"
+    implementation "com.google.code.gson:gson:2.13.2"
     implementation "dev.architectury:refmap-remapper:1.0.5"
-    compileOnly "org.jetbrains:annotations:23.0.0"
+    compileOnly "org.jetbrains:annotations:26.0.2"
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier "sources"
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier.set "sources"
     from sourceSets.main.allSource
 }
 
-task agentJar(type: Jar) {
-    classifier "agent"
+tasks.register('agentJar', Jar) {
+    archiveClassifier.set "agent"
     manifest {
         attributes(
                 "Premain-Class": "dev.architectury.transformer.agent.TransformerAgent",
@@ -85,13 +86,15 @@ task agentJar(type: Jar) {
     from sourceSets.agent.output
 }
 
-task agentSourcesJar(type: Jar, dependsOn: classes) {
-    classifier "agent-sources"
+tasks.register('agentSourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier.set "agent-sources"
     from sourceSets.agent.allSource
 }
 
-task runtimeJar(type: Jar, dependsOn: shadowJar) {
-    classifier "runtime"
+tasks.register('runtimeJar', Jar) {
+    dependsOn shadowJar
+    archiveClassifier.set "runtime"
     manifest {
         attributes(
                 "Main-Class": "dev.architectury.transformer.TransformerRuntime",
@@ -104,13 +107,14 @@ task runtimeJar(type: Jar, dependsOn: shadowJar) {
     }
 }
 
-task runtimeSourcesJar(type: Jar, dependsOn: classes) {
-    classifier "runtime-sources"
+tasks.register('runtimeSourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier.set "runtime-sources"
     from sourceSets.runtime.allSource
 }
 
 jar {
-    classifier "raw"
+    archiveClassifier.set "raw"
 }
 
 shadowJar {
@@ -124,11 +128,12 @@ shadowJar {
     relocate "dev.architectury.tinyremapper", "dev.architectury.transformer.shadowed.impl.dev.architectury.tinyremapper"
     relocate "dev.architectury.refmapremapper", "dev.architectury.transformer.shadowed.impl.dev.architectury.refmapremapper"
     configurations = [project.configurations.runtimeClasspath]
-    classifier "shadow"
+    archiveClassifier.set "shadow"
     exclude "module-info.class"
 }
 
-task mainJar(type: Jar, dependsOn: shadowJar) {
+tasks.register('mainJar', Jar) {
+    dependsOn shadowJar
     from zipTree(shadowJar.archiveFile)
 }
 
@@ -161,5 +166,6 @@ publishing {
                 }
             }
         }
+        mavenLocal()
     }
 }

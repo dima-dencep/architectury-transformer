@@ -24,8 +24,8 @@
 package dev.architectury.transformer.input;
 
 import dev.architectury.transformer.util.ClosableChecker;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.locks.Lock;
